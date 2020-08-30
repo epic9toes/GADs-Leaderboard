@@ -1,4 +1,4 @@
-package com.looptrace.gadsleaderboard;
+package com.looptrace.gadsleaderboard.activities;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
