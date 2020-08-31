@@ -2,12 +2,7 @@ package com.looptrace.gadsleaderboard.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -15,7 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.looptrace.gadsleaderboard.R;
 import com.looptrace.gadsleaderboard.customAdapters.ViewPagerAdapter;
-import com.looptrace.gadsleaderboard.fragments.LearningFragment;
+import com.looptrace.gadsleaderboard.fragments.HourFragment;
 import com.looptrace.gadsleaderboard.fragments.SkillFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
 
-    private LearningFragment mLearningFragment;
+    private HourFragment mHourFragment;
     private SkillFragment mSkillFragment;
 
 
@@ -42,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.view_pager);
         mTabLayout = findViewById(R.id.tab_layout);
 
-        mLearningFragment = new LearningFragment();
+        mHourFragment = new HourFragment();
         mSkillFragment = new SkillFragment();
 
         mTabLayout.setupWithViewPager(mViewPager);
 
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        mViewPagerAdapter.addFragment(mLearningFragment, "Learning Leaders");
+        mViewPagerAdapter.addFragment(mHourFragment, "Learning Leaders");
         mViewPagerAdapter.addFragment(mSkillFragment, "Skill IQ Leaders");
         mViewPager.setAdapter(mViewPagerAdapter);
 

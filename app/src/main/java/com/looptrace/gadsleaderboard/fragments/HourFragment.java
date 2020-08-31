@@ -16,50 +16,43 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.looptrace.gadsleaderboard.R;
-import com.looptrace.gadsleaderboard.customAdapters.SkillRecyclerAdapter;
+import com.looptrace.gadsleaderboard.customAdapters.HourRecyclerAdapter;
 import com.looptrace.gadsleaderboard.models.Hour;
-import com.looptrace.gadsleaderboard.models.Skill;
-import com.looptrace.gadsleaderboard.Repositories.SkillRepo;
+import com.looptrace.gadsleaderboard.Repositories.HourRepo;
 import com.looptrace.gadsleaderboard.viewmodels.HourViewModel;
-import com.looptrace.gadsleaderboard.viewmodels.SkillViewModel;
-import com.looptrace.gadsleaderboard.views.SkillIQView;
+import com.looptrace.gadsleaderboard.views.HoursView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SkillFragment extends Fragment {
+public class HourFragment extends Fragment {
 
-    private List<Skill> mSkills = new ArrayList<>();
-    private SkillRecyclerAdapter mAdapter;
-    private SkillViewModel mSkillViewModel;
+    private List<Hour> mHourList = new ArrayList<>();
+    private HourRecyclerAdapter mAdapter;
+    private HourViewModel mHourViewModel;
     private ProgressBar mProgressBar;
 
-    public SkillFragment() {
+    public HourFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_skill, container, false);
+        View view = inflater.inflate(R.layout.fragment_learning, container, false);
         mProgressBar = view.findViewById(R.id.progress_circular);
 
-        mSkillViewModel = ViewModelProviders.of(getActivity()).get(SkillViewModel.class);
-        mSkillViewModel.init();
+        mHourViewModel = ViewModelProviders.of(getActivity()).get(HourViewModel.class);
+        mHourViewModel.init();
 
-        getSkillIQ();
+        getHours();
         getThrowableError();
         getErrorCode();
 
-        RecyclerView recyclerView = view.findViewById(R.id.skill_recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.learning_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-        mAdapter = new SkillRecyclerAdapter(mSkills);
+        mAdapter = new HourRecyclerAdapter(mHourList);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -69,7 +62,7 @@ public class SkillFragment extends Fragment {
     }
 
     private void getErrorCode() {
-        mSkillViewModel.getErrorCode().observe(getActivity(), new Observer<String>() {
+        mHourViewModel.getErrorCode().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
@@ -80,7 +73,7 @@ public class SkillFragment extends Fragment {
     }
 
     private void getThrowableError() {
-        mSkillViewModel.getThrowableError().observe(getActivity(), new Observer<Throwable>() {
+        mHourViewModel.getThrowableError().observe(getActivity(), new Observer<Throwable>() {
             @Override
             public void onChanged(Throwable throwable) {
                 Toast.makeText(getActivity(), "ErrorMsg: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
@@ -89,14 +82,13 @@ public class SkillFragment extends Fragment {
         });
     }
 
-    private void getSkillIQ() {
-        mSkillViewModel.getHours().observe(getActivity(), new Observer<List<Skill>>() {
+    private void getHours() {
+        mHourViewModel.getHours().observe(getActivity(), new Observer<List<Hour>>() {
             @Override
-            public void onChanged(List<Skill> skills) {
-                mAdapter.setSkills(skills);
+            public void onChanged(List<Hour> hours) {
+                mAdapter.setHours(hours);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
-
 }
