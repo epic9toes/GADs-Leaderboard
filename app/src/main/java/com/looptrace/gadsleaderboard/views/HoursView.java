@@ -1,14 +1,14 @@
 package com.looptrace.gadsleaderboard.views;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.looptrace.gadsleaderboard.models.Hour;
 
 import java.util.List;
 
 public interface HoursView {
 
-    void GetHours(List<Hour> hours);
+    Throwable OnError(Throwable throwable);
 
-    void OnError(Throwable throwable);
-
-    void OnEmptyResult(String Message);
+    String OnEmptyResult(String Message);
 }

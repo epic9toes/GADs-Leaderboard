@@ -1,5 +1,6 @@
 package com.looptrace.gadsleaderboard.Repositories;
 
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.looptrace.gadsleaderboard.dataSource.GadsApi;
@@ -15,10 +16,11 @@ import retrofit2.Response;
 
 public class HourRepo {
 
-    private static HourRepo instance = null;
     private List<Hour> mHours = new ArrayList<>();
+    private static HourRepo instance = null;
     private MutableLiveData<Throwable> mThrowableMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<String> ErrorCode = new MutableLiveData<>();
+
 
     public static HourRepo getInstance() {
         if (instance == null) {
@@ -26,7 +28,6 @@ public class HourRepo {
         }
         return instance;
     }
-
 
     public MutableLiveData<List<Hour>> GetHours() {
         final MutableLiveData<List<Hour>> data = new MutableLiveData<>();
@@ -61,6 +62,4 @@ public class HourRepo {
     public MutableLiveData<String> GetErrorCode() {
         return ErrorCode;
     }
-
-
 }

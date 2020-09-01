@@ -23,4 +23,9 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/recycler_item" />
 
+    <include
+        android:id="@+id/error_page"
+        layout="@layout/error_info"
+        android:elevation="10dp"
+        android:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

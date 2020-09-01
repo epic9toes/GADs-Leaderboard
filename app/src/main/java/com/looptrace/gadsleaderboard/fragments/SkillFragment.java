@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.looptrace.gadsleaderboard.R;
@@ -36,6 +38,9 @@ public class SkillFragment extends Fragment {
     private SkillRecyclerAdapter mAdapter;
     private SkillViewModel mSkillViewModel;
     private ProgressBar mProgressBar;
+    private View mErrorPage;
+    private Button ErrBtn;
+    private TextView ErrMsg;
 
     public SkillFragment() {
         // Required empty public constructor
@@ -46,14 +51,26 @@ public class SkillFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_skill, container, false);
+
+        mErrorPage = view.findViewById(R.id.error_page);
+        ErrBtn = mErrorPage.findViewById(R.id.refresh_btn);
+        ErrMsg = mErrorPage.findViewById(R.id.error_msg);
+        ErrBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mErrorPage.setVisibility(View.INVISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mSkillViewModel.Retry();
+                getSkillIQ();
+            }
+        });
+
+
         mProgressBar = view.findViewById(R.id.progress_circular);
 
         mSkillViewModel = ViewModelProviders.of(getActivity()).get(SkillViewModel.class);
         mSkillViewModel.init();
-
         getSkillIQ();
-        getThrowableError();
-        getErrorCode();
 
         RecyclerView recyclerView = view.findViewById(R.id.skill_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -64,6 +81,9 @@ public class SkillFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
+        getThrowableError();
+        getErrorCode();
+
         // Inflate the layout for this fragment
         return view;
     }
@@ -72,7 +92,8 @@ public class SkillFragment extends Fragment {
         mSkillViewModel.getErrorCode().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                ErrMsg.setText(s);
+                mErrorPage.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
@@ -83,14 +104,15 @@ public class SkillFragment extends Fragment {
         mSkillViewModel.getThrowableError().observe(getActivity(), new Observer<Throwable>() {
             @Override
             public void onChanged(Throwable throwable) {
-                Toast.makeText(getActivity(), "ErrorMsg: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 mProgressBar.setVisibility(View.INVISIBLE);
+                ErrMsg.setText(getActivity().getResources().getString(R.string.network_error));
+                mErrorPage.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void getSkillIQ() {
-        mSkillViewModel.getHours().observe(getActivity(), new Observer<List<Skill>>() {
+        mSkillViewModel.getSkill().observe(getActivity(), new Observer<List<Skill>>() {
             @Override
             public void onChanged(List<Skill> skills) {
                 mAdapter.setSkills(skills);

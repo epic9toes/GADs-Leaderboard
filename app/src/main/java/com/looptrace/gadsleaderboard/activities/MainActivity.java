@@ -2,7 +2,10 @@ package com.looptrace.gadsleaderboard.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -15,13 +18,7 @@ import com.looptrace.gadsleaderboard.fragments.SkillFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
-
-    private HourFragment mHourFragment;
-    private SkillFragment mSkillFragment;
-
+    private Button mSubmitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +26,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        Toolbar toolbar = findViewById(R.id.mToolbar);
+        setSupportActionBar(toolbar);
+        mSubmitBtn = toolbar.findViewById(R.id.btn_submit);
+        mSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SubmitActivity.class));
+            }
+        });
 
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        mToolbar = findViewById(R.id.mToolbar);
-        setSupportActionBar(mToolbar);
+        HourFragment hourFragment = new HourFragment();
+        SkillFragment skillFragment = new SkillFragment();
 
-        mViewPager = findViewById(R.id.view_pager);
-        mTabLayout = findViewById(R.id.tab_layout);
-
-        mHourFragment = new HourFragment();
-        mSkillFragment = new SkillFragment();
-
-        mTabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorBG));
 
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        mViewPagerAdapter.addFragment(mHourFragment, "Learning Leaders");
-        mViewPagerAdapter.addFragment(mSkillFragment, "Skill IQ Leaders");
-        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPagerAdapter.addFragment(hourFragment, "Learning Leaders");
+        mViewPagerAdapter.addFragment(skillFragment, "Skill IQ Leaders");
+        viewPager.setAdapter(mViewPagerAdapter);
 
     }
 }

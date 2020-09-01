@@ -13,15 +13,17 @@ public class HourViewModel extends ViewModel {
     private MutableLiveData<List<Hour>> mHoursLiveData;
     private MutableLiveData<Throwable> mThrowableMutableLiveData;
     private MutableLiveData<String> mErrorCodeMutable;
+    private HourRepo mHourRepo;
+
 
     public void init() {
         if (mHoursLiveData != null) {
             return;
         }
-        HourRepo hourRepo = HourRepo.getInstance();
-        mHoursLiveData = hourRepo.GetHours();
-        mThrowableMutableLiveData = hourRepo.GetThrowableError();
-        mErrorCodeMutable = hourRepo.GetErrorCode();
+        mHourRepo = HourRepo.getInstance();
+        mHoursLiveData = mHourRepo.GetHours();
+        mThrowableMutableLiveData = mHourRepo.GetThrowableError();
+        mErrorCodeMutable = mHourRepo.GetErrorCode();
     }
 
     public LiveData<List<Hour>> getHours() {
@@ -34,6 +36,10 @@ public class HourViewModel extends ViewModel {
 
     public LiveData<String> getErrorCode() {
         return mErrorCodeMutable;
+    }
+
+    public void Retry() {
+        mHoursLiveData = mHourRepo.GetHours();
     }
 }
 

@@ -16,18 +16,19 @@ public class SkillViewModel extends ViewModel {
     private MutableLiveData<List<Skill>> mSkillMutableData;
     private MutableLiveData<Throwable> mThrowableMutableLiveData;
     private MutableLiveData<String> mErrorCodeMutable;
+    private SkillRepo mSkillRepo;
 
     public void init() {
         if (mSkillMutableData != null) {
             return;
         }
-        SkillRepo skillRepo = SkillRepo.getInstance();
-        mSkillMutableData = skillRepo.GetSkillIQ();
-        mThrowableMutableLiveData = skillRepo.GetThrowableError();
-        mErrorCodeMutable = skillRepo.GetErrorCode();
+        mSkillRepo = SkillRepo.getInstance();
+        mSkillMutableData = mSkillRepo.GetSkillIQ();
+        mThrowableMutableLiveData = mSkillRepo.GetThrowableError();
+        mErrorCodeMutable = mSkillRepo.GetErrorCode();
     }
 
-    public LiveData<List<Skill>> getHours() {
+    public LiveData<List<Skill>> getSkill() {
         return mSkillMutableData;
     }
 
@@ -37,6 +38,10 @@ public class SkillViewModel extends ViewModel {
 
     public LiveData<String> getErrorCode() {
         return mErrorCodeMutable;
+    }
+
+    public void Retry() {
+        mSkillMutableData = mSkillRepo.GetSkillIQ();
     }
 }
 

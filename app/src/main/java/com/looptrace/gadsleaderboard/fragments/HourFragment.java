@@ -12,15 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.looptrace.gadsleaderboard.R;
 import com.looptrace.gadsleaderboard.customAdapters.HourRecyclerAdapter;
 import com.looptrace.gadsleaderboard.models.Hour;
-import com.looptrace.gadsleaderboard.Repositories.HourRepo;
 import com.looptrace.gadsleaderboard.viewmodels.HourViewModel;
-import com.looptrace.gadsleaderboard.views.HoursView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,9 @@ public class HourFragment extends Fragment {
     private HourRecyclerAdapter mAdapter;
     private HourViewModel mHourViewModel;
     private ProgressBar mProgressBar;
+    private View mErrorPage;
+    private Button ErrBtn;
+    private TextView ErrMsg;
 
     public HourFragment() {
         // Required empty public constructor
@@ -40,14 +42,25 @@ public class HourFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_learning, container, false);
-        mProgressBar = view.findViewById(R.id.progress_circular);
+
+        mErrorPage = view.findViewById(R.id.error_page);
+        ErrBtn = mErrorPage.findViewById(R.id.refresh_btn);
+        ErrMsg = mErrorPage.findViewById(R.id.error_msg);
+        ErrBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mErrorPage.setVisibility(View.INVISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mHourViewModel.Retry();
+                getHours();
+            }
+        });
 
         mHourViewModel = ViewModelProviders.of(getActivity()).get(HourViewModel.class);
         mHourViewModel.init();
-
         getHours();
-        getThrowableError();
-        getErrorCode();
+
+        mProgressBar = view.findViewById(R.id.progress_circular);
 
         RecyclerView recyclerView = view.findViewById(R.id.learning_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -56,28 +69,32 @@ public class HourFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        getErrorCode();
+        getThrowableError();
 
         // Inflate the layout for this fragment
         return view;
     }
 
     private void getErrorCode() {
+
         mHourViewModel.getErrorCode().observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                ErrMsg.setText(s);
+                mErrorPage.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
     private void getThrowableError() {
         mHourViewModel.getThrowableError().observe(getActivity(), new Observer<Throwable>() {
             @Override
             public void onChanged(Throwable throwable) {
-                Toast.makeText(getActivity(), "ErrorMsg: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 mProgressBar.setVisibility(View.INVISIBLE);
+                ErrMsg.setText(getActivity().getResources().getString(R.string.network_error));
+                mErrorPage.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -87,8 +104,10 @@ public class HourFragment extends Fragment {
             @Override
             public void onChanged(List<Hour> hours) {
                 mAdapter.setHours(hours);
+                mErrorPage.setVisibility(View.INVISIBLE);
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
+
 }
