@@ -32,7 +32,7 @@ public class HourRepo {
     public MutableLiveData<List<Hour>> GetHours() {
         final MutableLiveData<List<Hour>> data = new MutableLiveData<>();
 
-        GadsApi gadsApi = RetrofitBase.getInstance().buildRetrofit().create(GadsApi.class);
+        GadsApi gadsApi = RetrofitBase.getInstance().buildRetrofit(RetrofitBase.GET_BASE_URL).create(GadsApi.class);
         Call<List<Hour>> call = gadsApi.getHours();
         call.enqueue(new Callback<List<Hour>>() {
             @Override

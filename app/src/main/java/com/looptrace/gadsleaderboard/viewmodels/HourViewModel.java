@@ -15,8 +15,11 @@ public class HourViewModel extends ViewModel {
     private MutableLiveData<String> mErrorCodeMutable;
     private HourRepo mHourRepo;
 
+    public HourViewModel() {
+        init();
+    }
 
-    public void init() {
+    private void init() {
         if (mHoursLiveData != null) {
             return;
         }

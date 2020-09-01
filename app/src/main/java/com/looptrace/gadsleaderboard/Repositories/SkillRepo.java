@@ -30,7 +30,7 @@ public class SkillRepo {
 
     public MutableLiveData<List<Skill>> GetSkillIQ() {
         final MutableLiveData<List<Skill>> data = new MutableLiveData<>();
-        GadsApi gadsApi = RetrofitBase.getInstance().buildRetrofit().create(GadsApi.class);
+        GadsApi gadsApi = RetrofitBase.getInstance().buildRetrofit(RetrofitBase.GET_BASE_URL).create(GadsApi.class);
         Call<List<Skill>> call = gadsApi.getSkill();
         call.enqueue(new Callback<List<Skill>>() {
             @Override

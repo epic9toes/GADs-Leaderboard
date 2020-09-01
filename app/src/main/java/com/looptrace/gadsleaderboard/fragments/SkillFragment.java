@@ -19,12 +19,8 @@ import android.widget.Toast;
 
 import com.looptrace.gadsleaderboard.R;
 import com.looptrace.gadsleaderboard.customAdapters.SkillRecyclerAdapter;
-import com.looptrace.gadsleaderboard.models.Hour;
 import com.looptrace.gadsleaderboard.models.Skill;
-import com.looptrace.gadsleaderboard.Repositories.SkillRepo;
-import com.looptrace.gadsleaderboard.viewmodels.HourViewModel;
 import com.looptrace.gadsleaderboard.viewmodels.SkillViewModel;
-import com.looptrace.gadsleaderboard.views.SkillIQView;
 
 import java.util.ArrayList;
 import java.util.List;

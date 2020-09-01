@@ -6,7 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitBase {
 
     private static RetrofitBase instance = null;
-    public static final String BASE_URL = "https://gadsapi.herokuapp.com/api/";
+    public static final String GET_BASE_URL = "https://gadsapi.herokuapp.com/api/";
+    public static final String POST_BASE_URL = "https://docs.google.com/forms/d/e/";
 
     public static RetrofitBase getInstance() {
         if (instance == null) {
@@ -16,12 +17,10 @@ public class RetrofitBase {
         return instance;
     }
 
-    public Retrofit buildRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+    public Retrofit buildRetrofit(String BaseUrl) {
+        return new Retrofit.Builder()
+                .baseUrl(BaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        return retrofit;
     }
 }

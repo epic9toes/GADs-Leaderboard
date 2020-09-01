@@ -57,7 +57,6 @@ public class HourFragment extends Fragment {
         });
 
         mHourViewModel = ViewModelProviders.of(getActivity()).get(HourViewModel.class);
-        mHourViewModel.init();
         getHours();
 
         mProgressBar = view.findViewById(R.id.progress_circular);
