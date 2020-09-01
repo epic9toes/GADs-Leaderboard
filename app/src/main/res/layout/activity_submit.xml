@@ -55,6 +55,17 @@
         android:background="@color/colorCaption"
         app:layout_constraintTop_toBottomOf="@id/caption_txt" />
 
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/form_container"
+        app:layout_constraintEnd_toEndOf="@+id/form_container"
+        app:layout_constraintStart_toStartOf="@+id/form_container"
+        app:layout_constraintTop_toTopOf="@+id/top_panel" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/form_container"
         android:layout_width="match_parent"

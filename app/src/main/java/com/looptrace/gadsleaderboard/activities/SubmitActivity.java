@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class SubmitActivity extends AppCompatActivity {
     private View mDialogView, mFormContainer;
     private ImageView mCancelBtn, mBackBtn;
     private TextView mFirstName, mLastName, mEmailAddress, mProjectLink;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class SubmitActivity extends AppCompatActivity {
             }
         });
 
+        mProgressBar = findViewById(R.id.progress_circular);
         mFirstName = findViewById(R.id.first_name);
         mLastName = findViewById(R.id.last_name);
         mEmailAddress = findViewById(R.id.email_address);
@@ -74,7 +77,7 @@ public class SubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mAlertDialog.dismiss();
-                FailedDialog(v);
+                Toast.makeText(SubmitActivity.this, "Submission Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -95,7 +98,7 @@ public class SubmitActivity extends AppCompatActivity {
         mAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                mFormContainer.setVisibility(View.VISIBLE);
+                finish();
             }
         });
     }
@@ -117,8 +120,8 @@ public class SubmitActivity extends AppCompatActivity {
     }
 
     void ValidateFields(View v) {
-        if (mFirstName.getText().toString().equals("") || mLastName.getText().toString().equals("") || mEmailAddress.getText().toString().equals("")
-                || mProjectLink.getText().toString().equals("")) {
+        if (mFirstName.getText().toString().trim().equals("") || mLastName.getText().toString().trim().equals("") || mEmailAddress.getText().toString().trim().equals("")
+                || mProjectLink.getText().toString().trim().equals("")) {
             Toast.makeText(this, "Missing field, all fields are required!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -131,24 +134,29 @@ public class SubmitActivity extends AppCompatActivity {
         String emailAddress = mEmailAddress.getText().toString();
         String projectLink = mProjectLink.getText().toString();
 
+        mProgressBar.setVisibility(View.VISIBLE);
         GadsApi api = RetrofitBase.getInstance().buildRetrofit(RetrofitBase.POST_BASE_URL).create(GadsApi.class);
-        api.submitForm(emailAddress, firstName, lastName, projectLink).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(SubmitActivity.this, "A " + response.code() + " occurred", Toast.LENGTH_SHORT).show();
-                    FailedDialog(v);
-                    return;
-                }
-                SuccessDialog(v);
-            }
+        api.submitForm(emailAddress, firstName, lastName, projectLink)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        mProgressBar.setVisibility(View.INVISIBLE);
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(SubmitActivity.this, t.getMessage() + ", try again later.", Toast.LENGTH_SHORT).show();
-                FailedDialog(v);
-            }
-        });
+                        if (!response.isSuccessful()) {
+                            Toast.makeText(SubmitActivity.this, "A " + response.code() + " occurred", Toast.LENGTH_SHORT).show();
+                            FailedDialog(v);
+                            return;
+                        }
+                        SuccessDialog(v);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(SubmitActivity.this, t.getMessage() + ", try again later.", Toast.LENGTH_SHORT).show();
+                        FailedDialog(v);
+                    }
+                });
 
     }
 }
